@@ -175,6 +175,9 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
         public void setImageList(List<ImageEntity> imageList){
             mValues = imageList;
         }
+        public List<ImageEntity> getImageList(){
+            return mValues;
+        }
     }
 
     @Override
@@ -208,7 +211,7 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
             if (resultData != null) {
                 uri = resultData.getData();
                 Log.d(LOG_TAG, "Uri: " + uri.toString());
-                new ImageProcessor(this).process(uri);
+                new ImageProcessor(this).process(uri,mViewAdapter.getImageList()) ;
             }
             Log.d(LOG_TAG, "onActivityResult:: end");
         }

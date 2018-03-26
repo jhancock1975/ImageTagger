@@ -24,6 +24,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -75,6 +78,18 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
     public ImageEntity loadInBackground() {
         byte[] imageBytes = imageUriToByteArray();
         classifyPhoto(mApiKey, imageBytes);
+        return new ImageEntity(mImageUri.getPath(), getSha256(imageBytes), new Date(System.currentTimeMillis()));
+    }
+
+    private String getSha256(byte[] imageBytes) {
+        Log.d(LOG_TAG, "getSha256::start");
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            md.update(imageBytes);
+            return new String(md.digest());
+        } catch (NoSuchAlgorithmException e) {
+            Log.d(LOG_TAG, "SHA not found, returning null.");
+        }
         return null;
     }
 

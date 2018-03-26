@@ -3,22 +3,12 @@ package com.kewlala.imagetaggger;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Loader;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 
 import com.kewlala.imagetaggger.data.ImageEntity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.util.List;
 
 /**
@@ -27,37 +17,56 @@ import java.util.List;
 
 public class ImageProcessor implements   LoaderManager.LoaderCallbacks<ImageEntity>{
 
+    private static final String LOG_TAG= ImageProcessor.class.getSimpleName();
     public static final int IMAGE_PROCESSOR_ID=2;
+
     private Activity mActivity;
     private Uri mImageUri;
-    private static final String LOG_TAG= ImageProcessor.class.getSimpleName();
+    private  List<ImageEntity> mImageList;
+
+    /**
+     * constructor
+     * @param activity - hook back to calling activity
+     */
     public ImageProcessor(Activity activity){
         mActivity = activity;
     }
-    public void process(Uri uri){
+
+    /**
+     * sends the image uri points to, to the Clarifai image categorization service
+     * @param uri - a uri pointing to some image on the device
+     */
+    public void process(Uri uri, List<ImageEntity> imageList){
+
         Log.d(LOG_TAG, "process::start");
         Log.d(LOG_TAG, "Uri: " + uri);
+
         mImageUri = uri;
+        mImageList = imageList;
+
         mActivity.getLoaderManager().initLoader(
                 IMAGE_PROCESSOR_ID, null, this).forceLoad();
+
         Log.d(LOG_TAG, "process::end");
     }
 
-
-
-
     @Override
     public Loader<ImageEntity> onCreateLoader(int id, Bundle args) {
+        Log.d(LOG_TAG, "onCreateLoader::start");
         return new ImageService(mActivity.getBaseContext(), mImageUri);
     }
 
     @Override
     public void onLoadFinished(Loader<ImageEntity> loader, ImageEntity data) {
+        Log.d(LOG_TAG, "onLoaderFinished::start");
+        Log.d(LOG_TAG, "sha256 = " + data.getSha256());
+        mImageList.add(data);
+        Log.d(LOG_TAG, "onLoaderFinished::end");
 
     }
 
     @Override
     public void onLoaderReset(Loader<ImageEntity> loader) {
-
+        Log.d(LOG_TAG, "onLoaderReset::start");
     }
 }

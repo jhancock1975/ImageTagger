@@ -15,6 +15,15 @@ import java.sql.Date;
 @Entity
 public class ImageEntity {
 
+    public ImageEntity(){
+    }
+
+    public ImageEntity(String filePath, String sha256, Date created) {
+        this.filePath = filePath;
+        this.sha256 = sha256;
+        this.created = created;
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int imageId;
 
