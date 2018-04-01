@@ -216,4 +216,8 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
             Log.d(LOG_TAG, "onActivityResult:: end");
         }
     }
+
+    public SimpleItemRecyclerViewAdapter getmViewAdapter() {
+        return mViewAdapter;
+    }
 }

@@ -18,9 +18,13 @@ import java.util.List;
 
 public class ImageLoader extends AsyncTaskLoader<List<ImageEntity>> {
     public static final String LOG_TAG = ImageLoader.class.getSimpleName();
+    private Context mContext;
 
     public ImageLoader(Context context) {
         super(context);
+        Log.d(LOG_TAG, "ImageLoader::begin constructor");
+        mContext = context;
+        Log.d(LOG_TAG, "ImageLoader::end constructor");
     }
 
     private AppDatabase db;
@@ -28,8 +32,8 @@ public class ImageLoader extends AsyncTaskLoader<List<ImageEntity>> {
     public List<ImageEntity> loadInBackground() {
         Log.d(LOG_TAG, "loadInBackground :: start");
 
-        db = Room.databaseBuilder(getContext(),
-                AppDatabase.class, "ImageTagger").addMigrations(MIGRATION_1_2 ).build();
+        db = AppDatabase.getInstance(mContext);
+
         List<ImageEntity> imgList = null;
         if (db != null) {
             Log.d(LOG_TAG, db.toString());
@@ -46,24 +50,5 @@ public class ImageLoader extends AsyncTaskLoader<List<ImageEntity>> {
         }
         Log.d(LOG_TAG, "loadInBackground :: end");
         return imgList;
-    }
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("create table Image2 (imageId INTEGER not null primary key, filePath TEXT,"
-                    + " sha256 text, created INTEGER)");
-            database.execSQL("insert into Image2 (imageId, filePath, sha256, created) "
-                    + "select imageId, filePath, sha256,created from ImageEntity");
-            database.execSQL("drop table ImageEntity");
-            database.execSQL("alter table Image2 rename to ImageEntity");
-        }
-    };
-
-    public void createNewImage(){
-        ImageEntity imgEntity = new ImageEntity();
-        imgEntity.setCreated(new java.sql.Date(System.currentTimeMillis()));
-        imgEntity.setFilePath("test");
-        imgEntity.setSha256("test");
-        db.imageEntityDao().insertAll(imgEntity);
     }
 }

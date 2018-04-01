@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
+import com.kewlala.imagetaggger.data.AppDatabase;
 import com.kewlala.imagetaggger.data.ImageEntity;
 
 import org.json.JSONArray;
@@ -78,7 +79,9 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
     public ImageEntity loadInBackground() {
         byte[] imageBytes = imageUriToByteArray();
         classifyPhoto(mApiKey, imageBytes);
-        return new ImageEntity(mImageUri.getPath(), getSha256(imageBytes), new Date(System.currentTimeMillis()));
+        ImageEntity entity = new ImageEntity(mImageUri.getPath(), getSha256(imageBytes), new Date(System.currentTimeMillis()));
+        AppDatabase.getInstance(mAppContext).imageEntityDao().insertAll(entity);
+        return entity;
     }
 
     private String getSha256(byte[] imageBytes) {
