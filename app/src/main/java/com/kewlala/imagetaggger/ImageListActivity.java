@@ -14,6 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -58,6 +61,7 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +104,17 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
         Log.d(LOG_TAG, "onCreate::end");
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.image_tagger_main_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(LOG_TAG, "onOptionsItemSelected::start");
+        return true;
+    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         mViewAdapter  = new SimpleItemRecyclerViewAdapter(this,
