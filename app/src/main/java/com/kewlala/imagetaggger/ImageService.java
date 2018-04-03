@@ -301,7 +301,7 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
                         + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake " +
+            Log.e(LOG_TAG, "Problem retrieving the classification result" +
                     "JSON results.", e);
         } finally {
             if (urlConnection != null) {
@@ -311,7 +311,7 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
                 inputStream.close();
             }
         }
+        Log.d(LOG_TAG, "makeHttpRequest::end");
         return jsonResponse;
     }
-
 }
