@@ -52,7 +52,10 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
     private View mRecyclerView;
     private SimpleItemRecyclerViewAdapter mViewAdapter;
+
+    /*TODO: jhancock1975@gmail.com replace progress dialog with progress bar*/
     private ProgressBar mProgressBar;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,7 +242,9 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
                 Log.d(LOG_TAG, "Uri: " + uri.toString());
                 String uriStr = uri.toString();
 
-                mProgressBar.setVisibility(View.VISIBLE);// To Show ProgressBar
+                mProgressDialog = ProgressDialog.show(this, "Classifying Image",
+                        "Please wait...", true);
+
                 new ImageProcessor(this).process(uri,mViewAdapter.getImageList()) ;
             }
             Log.d(LOG_TAG, "onActivityResult:: end");
@@ -249,7 +254,8 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
     public SimpleItemRecyclerViewAdapter getmViewAdapter() {
         return mViewAdapter;
     }
-    public ProgressBar getProgressBar(){
-        return mProgressBar;
+
+    public ProgressDialog getProgressDialog(){
+        return mProgressDialog;
     }
 }

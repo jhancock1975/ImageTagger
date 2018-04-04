@@ -65,7 +65,7 @@ public class ImageProcessor implements   LoaderManager.LoaderCallbacks<ImageEnti
         mImageList.add(data);
         //tell the view to redraw with new item
         ((ImageListActivity) mActivity).getmViewAdapter().notifyDataSetChanged();
-        ((ImageListActivity) mActivity).getProgressBar().setVisibility(View.INVISIBLE);
+        ((ImageListActivity) mActivity).getProgressDialog().dismiss();
         Log.d(LOG_TAG, "onLoaderFinished::end");
 
     }
