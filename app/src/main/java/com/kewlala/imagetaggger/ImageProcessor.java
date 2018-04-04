@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.kewlala.imagetaggger.data.AppDatabase;
 import com.kewlala.imagetaggger.data.ImageEntity;
@@ -64,6 +65,7 @@ public class ImageProcessor implements   LoaderManager.LoaderCallbacks<ImageEnti
         mImageList.add(data);
         //tell the view to redraw with new item
         ((ImageListActivity) mActivity).getmViewAdapter().notifyDataSetChanged();
+        ((ImageListActivity) mActivity).getProgressBar().setVisibility(View.INVISIBLE);
         Log.d(LOG_TAG, "onLoaderFinished::end");
 
     }

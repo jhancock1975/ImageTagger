@@ -2,12 +2,14 @@ package com.kewlala.imagetaggger;
 
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kewlala.imagetaggger.data.ImageEntity;
@@ -48,6 +52,7 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
     private View mRecyclerView;
     private SimpleItemRecyclerViewAdapter mViewAdapter;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,7 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_list);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -202,12 +208,16 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
     @Override
     public void onLoadFinished(Loader<List<ImageEntity>> loader, List<ImageEntity> data) {
+        Log.d(LOG_TAG, "onLoadFinished::start");
         mViewAdapter.setImageList(data);
+        getmViewAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onLoaderReset(Loader<List<ImageEntity>> loader) {
+        Log.d(LOG_TAG, "onLoaderReset::start");
         mViewAdapter.setImageList(new ArrayList<ImageEntity>());
+        getmViewAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -225,7 +235,11 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
+
                 Log.d(LOG_TAG, "Uri: " + uri.toString());
+                String uriStr = uri.toString();
+
+                mProgressBar.setVisibility(View.VISIBLE);// To Show ProgressBar
                 new ImageProcessor(this).process(uri,mViewAdapter.getImageList()) ;
             }
             Log.d(LOG_TAG, "onActivityResult:: end");
@@ -234,5 +248,8 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
     public SimpleItemRecyclerViewAdapter getmViewAdapter() {
         return mViewAdapter;
+    }
+    public ProgressBar getProgressBar(){
+        return mProgressBar;
     }
 }
