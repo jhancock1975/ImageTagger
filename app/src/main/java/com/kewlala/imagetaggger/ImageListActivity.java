@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -122,6 +123,29 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(LOG_TAG, "onOptionsItemSelected::start");
+        Log.d(LOG_TAG, "item.getTitle() " + item.getTitle());
+        View v;
+        if (item.getTitle().equals(getString(R.string.action_edit_list))) {
+            item.setTitle(R.string.title_menu_delete);
+            for (ImageEntity e : mViewAdapter.getImageList()) {
+                Log.d(LOG_TAG, e.toString());
+                v = mRecyclerView.findViewWithTag(e);
+                if (v != null) {
+                    v.findViewById(R.id.id_radio_delete_select).setVisibility(View.VISIBLE);
+                }
+            }
+        } else {
+            item.setTitle(R.string.action_edit_list);
+            for (ImageEntity e : mViewAdapter.getImageList()) {
+                Log.d(LOG_TAG, e.toString());
+                v = mRecyclerView.findViewWithTag(e);
+                if (v != null) {
+                    if (((RadioButton) v.findViewById(R.id.id_radio_delete_select)).isSelected()){
+                        Log.d(LOG_TAG, "deleting image...");
+                    }
+                }
+            }
+        }
         return true;
     }
 

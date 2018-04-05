@@ -2,4 +2,5 @@
     <string name="app_name">ImageTaggger</string>
     <string name="title_image_detail">Image Detail</string>
     <string name="action_edit_list">Edit Image List</string>
+    <string name="title_menu_delete">Delete</string>
 </resources>
