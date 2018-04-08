@@ -139,8 +139,11 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
             for (ImageEntity e : mViewAdapter.getImageList()) {
                 Log.d(LOG_TAG, e.toString());
                 v = mRecyclerView.findViewWithTag(e);
+                Log.d(LOG_TAG, "v = " + v);
                 if (v != null) {
-                    if (((RadioButton) v.findViewById(R.id.id_radio_delete_select)).isSelected()){
+                    RadioButton rb = (RadioButton) v.findViewById(R.id.id_radio_delete_select);
+                    Log.d(LOG_TAG, "rb = " + rb);
+                    if (((RadioButton) v.findViewById(R.id.id_radio_delete_select)).isChecked()){
                         Log.d(LOG_TAG, "deleting image...");
                     }
                 }
