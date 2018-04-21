@@ -26,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kewlala.imagetaggger.data.AppDatabase;
 import com.kewlala.imagetaggger.data.ImageEntity;
 
 import java.util.ArrayList;
@@ -136,6 +137,7 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
             }
         } else {
             item.setTitle(R.string.action_edit_list);
+            List<ImageEntity> deleteList = new ArrayList<ImageEntity>(3);
             for (ImageEntity e : mViewAdapter.getImageList()) {
                 Log.d(LOG_TAG, e.toString());
                 v = mRecyclerView.findViewWithTag(e);
@@ -145,9 +147,20 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
                     Log.d(LOG_TAG, "rb = " + rb);
                     if (((RadioButton) v.findViewById(R.id.id_radio_delete_select)).isChecked()){
                         Log.d(LOG_TAG, "deleting image...");
+                        deleteList.add(e);
                     }
                 }
             }
+            //can't delete on main thread
+            //using async task example: http://www.jithin88.com/2012/05/async-task-in-android.html
+            //would probably be better to use Cursor loader for this list
+            //https://developer.android.com/guide/components/loaders.html
+            if (deleteList.size() > 0){
+                SyncIncoData task = new SyncIncoData(this);
+                task.execute(((ImageEntity[]) deleteList.toArray()));
+            }
+            //redraw list after deleting items from db
+            getLoaderManager().initLoader(IMAGE_LIST_ACTIVITY_ID, null, this).reset();
         }
         return true;
     }
