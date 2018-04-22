@@ -157,9 +157,11 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
             //https://developer.android.com/guide/components/loaders.html
             if (deleteList.size() > 0){
                 SyncIncoData task = new SyncIncoData(this);
-                task.execute(((ImageEntity[]) deleteList.toArray()));
+                task.execute(((ImageEntity[]) deleteList.toArray(new ImageEntity[deleteList.size()])));
+
             }
             //redraw list after deleting items from db
+            getmViewAdapter().notifyDataSetChanged();
             getLoaderManager().initLoader(IMAGE_LIST_ACTIVITY_ID, null, this).reset();
         }
         return true;
