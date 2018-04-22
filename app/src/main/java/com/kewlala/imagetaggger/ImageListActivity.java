@@ -161,8 +161,8 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
 
             }
             //redraw list after deleting items from db
-            getmViewAdapter().notifyDataSetChanged();
-            getLoaderManager().initLoader(IMAGE_LIST_ACTIVITY_ID, null, this).reset();
+            getLoaderManager().initLoader(IMAGE_LIST_ACTIVITY_ID, null, this).forceLoad();
+            //getmViewAdapter().notifyDataSetChanged();
         }
         return true;
     }
