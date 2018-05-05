@@ -85,4 +85,12 @@ public class ImageEntity {
         }
 
     };
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+        }
+
+    };
 }

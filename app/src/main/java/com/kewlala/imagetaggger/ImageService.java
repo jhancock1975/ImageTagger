@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.kewlala.imagetaggger.data.AppDatabase;
+import com.kewlala.imagetaggger.data.ClassificationEntity;
 import com.kewlala.imagetaggger.data.ImageEntity;
 
 import org.json.JSONArray;
@@ -65,6 +66,7 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
         super(applicationContext);
         this.mAppContext = applicationContext;
         this.mImageUri = imageUri;
+
         if (mApiKey == null){
             AssetsPropertyReader assetsPropertyReader
                     = new AssetsPropertyReader(mAppContext);
@@ -78,9 +80,27 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
     @Override
     public ImageEntity loadInBackground() {
         byte[] imageBytes = imageUriToByteArray();
-        classifyPhoto(mApiKey, imageBytes);
-        ImageEntity entity = new ImageEntity(mImageUri.getPath(), getSha256(imageBytes), new Date(System.currentTimeMillis()));
-        AppDatabase.getInstance(mAppContext).imageEntityDao().insertAll(entity);
+        Log.d(LOG_TAG,"loadInBackground::start");
+                //if classification is going to error out, do that before inserting anything
+
+
+        ImageEntity entity = new ImageEntity(mImageUri.getPath(), getSha256(imageBytes),
+                new Date(System.currentTimeMillis()));
+        AppDatabase db = AppDatabase.getInstance(mAppContext);
+
+        db.imageEntityDao().insertAll(entity);
+        //read the image back to get the image id
+        entity = db.imageEntityDao().findByPath(entity.getFilePath());
+
+        Log.d(LOG_TAG, "loadInBackground:: entity.imageId = " + entity.getImageId());
+
+        ArrayList<ClassificationEntity> classificationResults
+                = classifyPhoto(mApiKey, imageBytes, entity.getImageId());
+
+        db.classificationEntityDao().insertAll(
+                classificationResults.toArray(
+                        new ClassificationEntity[classificationResults.size()]));
+
         return entity;
     }
 
@@ -175,12 +195,12 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
         }
     }
 
-    private ArrayList<PhotoTaggerListItem> classifyPhoto(String apiKey, byte[] imageBytes) {
+    private ArrayList<ClassificationEntity> classifyPhoto(String apiKey, byte[] imageBytes, int imageId) {
 
         Log.d(LOG_TAG, "classify photo:: starting");
 
         // Create an empty ArrayList that we can start Clarify's model output to
-        ArrayList<PhotoTaggerListItem> conceptList = new ArrayList<PhotoTaggerListItem>();
+        ArrayList<ClassificationEntity> conceptList = new ArrayList<ClassificationEntity>();
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -219,7 +239,7 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
 
 
                     double curProbability = Double.NaN;
-                    PhotoTaggerListItem listItem;
+                    ClassificationEntity listItem;
                     try {
                         curProbability = curConcept.getDouble(probability_key);
 
@@ -227,7 +247,8 @@ class ImageService extends AsyncTaskLoader<ImageEntity> {
                         Log.d(LOG_TAG,
                                 "unable to parse curProbability = " + curProbability, e);
                     } finally {
-                        listItem = new PhotoTaggerListItem(curName, curProbability);
+                        listItem = new ClassificationEntity(imageId, curName, curProbability,
+                                new java.sql.Date(System.currentTimeMillis()));
                     }
                     Log.d(LOG_TAG, "list item = " + listItem.toString());
                     conceptList.add(listItem);

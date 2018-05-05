@@ -13,18 +13,19 @@ import java.util.List;
 
 @Dao
 public interface ImageEntityDao {
-    @Query("select * from imageentity")
-    List<ImageEntity> getAll();
+        @Query("select * from imageentity")
+        List<ImageEntity> getAll();
 
-    @Query("SELECT * FROM imageentity WHERE imageId IN (:imageIds)")
-    List<ImageEntity> loadAllByIds(int[] imageIds);
+        @Query("SELECT * FROM imageentity WHERE imageId IN (:imageIds)")
+        List<ImageEntity> loadAllByIds(int[] imageIds);
 
-    @Query("SELECT * FROM imageentity WHERE filePath LIKE :path LIMIT 1")
-    ImageEntity findByPath(String path);
+        @Query("SELECT * FROM imageentity WHERE filePath LIKE :path LIMIT 1")
+        ImageEntity findByPath(String path);
 
-    @Insert
-    void insertAll(ImageEntity... imageEntities);
+        @Insert
+        void insertAll(ImageEntity... imageEntities);
 
-    @Delete
-    void delete(ImageEntity imageEntity);
+        @Delete
+        void delete(ImageEntity imageEntity);
+
 }

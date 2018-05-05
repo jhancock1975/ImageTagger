@@ -147,6 +147,7 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
                     Log.d(LOG_TAG, "rb = " + rb);
                     if (((RadioButton) v.findViewById(R.id.id_radio_delete_select)).isChecked()){
                         Log.d(LOG_TAG, "deleting image...");
+                        ((RadioButton) v.findViewById(R.id.id_radio_delete_select)).setChecked(false);
                         deleteList.add(e);
                     }
                 }
