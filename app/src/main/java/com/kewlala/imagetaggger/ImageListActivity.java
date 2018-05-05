@@ -9,7 +9,6 @@ import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -23,10 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kewlala.imagetaggger.data.AppDatabase;
 import com.kewlala.imagetaggger.data.ImageEntity;
 
 import java.util.ArrayList;
@@ -183,20 +180,27 @@ public class ImageListActivity extends AppCompatActivity implements LoaderManage
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(LOG_TAG,
+                        "SimpleItemRecyclerViewAdapter.OnClickListener.onClick:: start");
                 ImageEntity item  = (ImageEntity) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ImageDetailFragment.ARG_ITEM_ID, item.getFilePath());
+                    arguments.putString(ImageDetailFragment.ARG_ITEM_PATH, item.getFilePath());
+                    arguments.putInt(ImageDetailFragment.ARG_ITEM_ID, item.getImageId());
+                    arguments.putSerializable(ImageDetailFragment.ARG_ITEM_OBJ, item);
                     ImageDetailFragment fragment = new ImageDetailFragment();
                     fragment.setArguments(arguments);
 
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ImageDetailActivity.class);
-                    intent.putExtra(ImageDetailFragment.ARG_ITEM_ID, item.getFilePath());
-
+                    intent.putExtra(ImageDetailFragment.ARG_ITEM_PATH, item.getFilePath());
+                    intent.putExtra(ImageDetailFragment.ARG_ITEM_ID, item.getImageId());
+                    intent.putExtra(ImageDetailFragment.ARG_ITEM_OBJ, item);
                     context.startActivity(intent);
                 }
+                Log.d(LOG_TAG,
+                        "SimpleItemRecyclerViewAdapter.OnClickListener.onClick:: end");
             }
         };
 

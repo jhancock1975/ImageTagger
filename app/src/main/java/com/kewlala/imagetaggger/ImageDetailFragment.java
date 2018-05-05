@@ -4,12 +4,18 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kewlala.imagetaggger.data.ClassificationEntity;
 import com.kewlala.imagetaggger.data.ImageEntity;
+
+import java.util.List;
 
 /**
  * A fragment representing a single Image detail screen.
@@ -17,12 +23,15 @@ import com.kewlala.imagetaggger.data.ImageEntity;
  * in two-pane mode (on tablets) or a {@link ImageDetailActivity}
  * on handsets.
  */
-public class ImageDetailFragment extends Fragment {
+public class ImageDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<ClassificationEntity>>{
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
+    public static final String ARG_ITEM_PATH = "item_path";
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_OBJ = "item_object";
+    public static final String LOG_TAG = ImageDetailFragment.class.getSimpleName();
 
     /**
      * The dummy content this fragment is presenting.
@@ -39,8 +48,11 @@ public class ImageDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        Log.d(LOG_TAG, "onCreate::start");
+        Object item = getArguments().get(ARG_ITEM_OBJ);
+        Log.d(LOG_TAG, "item = " + item);
+        
+        if (getArguments().containsKey(ARG_ITEM_PATH)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
@@ -65,5 +77,20 @@ public class ImageDetailFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public Loader<List<ClassificationEntity>> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<ClassificationEntity>> loader, List<ClassificationEntity> data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<ClassificationEntity>> loader) {
+
     }
 }

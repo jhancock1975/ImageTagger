@@ -54,8 +54,10 @@ public class ImageDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ImageDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ImageDetailFragment.ARG_ITEM_ID));
+            arguments.putString(ImageDetailFragment.ARG_ITEM_PATH,
+                    getIntent().getStringExtra(ImageDetailFragment.ARG_ITEM_PATH));
+            arguments.putSerializable(ImageDetailFragment.ARG_ITEM_OBJ,
+                    getIntent().getSerializableExtra(ImageDetailFragment.ARG_ITEM_OBJ));
             ImageDetailFragment fragment = new ImageDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

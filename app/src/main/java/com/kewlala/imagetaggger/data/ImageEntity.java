@@ -6,14 +6,17 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.migration.Migration;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * Created by jhancock2010 on 3/4/18.
  */
 @Entity
-public class ImageEntity {
+public class ImageEntity implements Serializable{
 
     public ImageEntity(){
     }
@@ -93,4 +96,5 @@ public class ImageEntity {
         }
 
     };
+
 }
